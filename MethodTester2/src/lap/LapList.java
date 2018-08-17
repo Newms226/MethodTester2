@@ -1,10 +1,13 @@
 package lap;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public interface LapList {
+public interface LapList extends Cloneable, Serializable {
 	
 	/**
 	 * Method for recoding a lap where the elapsed time has already been calculated by the client.
@@ -45,9 +48,16 @@ public interface LapList {
 	 * A convenience method which allows the client to create the Lap object externally.
 	 * 
 	 * @param lap the {@link Lap} object to be added
+	 * 
 	 * @return
 	 */
 	Lap lap(Lap lap);
+	
+	/**********************************************************************************************
+	 *                                                                                            *
+	 *                                   LIST & ARRAY METHODS                                     *
+	 *                                                                                            *
+	 **********************************************************************************************
 
 	/**
 	 * Utility method for extracting the list of elapsed times as doubles to enable analysis by the
@@ -58,6 +68,17 @@ public interface LapList {
 	double[] getAsDoubleArray();
 	
 	/**
+	 * Method to return a {@code double[]} object filtered through the predicate passed as a 
+	 * parameter. All implementing classes should ensure that this method does not harm the 
+	 * underlying list of laps, but merely provides a copy of the the laps for analysis.
+	 * 
+	 * @param predicate to filter the list as
+	 * 
+	 * @return a {@code double[]} filtered through the predicate
+	 */
+	double[] getAsFilteredDoubleArray(LapPredicate predicate);
+	
+	/**
 	 * Returns a {@code List<Lap>} of all the laps in this list. By this interface's contract, an
 	 * empty list of {@code Laps} should return a null value.
 	 * 
@@ -66,12 +87,24 @@ public interface LapList {
 	List<Lap> getLaps();
 	
 	/**
-	 * Designed to return a mapping of the run number to the lap created during that run. Useful for
-	 * sorting purposes and complex analysis.
+	 * Method to return a {@code LapList} object filtered through the predicate passed as a 
+	 * parameter. All implementing classes should ensure that this method does not harm the 
+	 * underlying list of laps, but merely provides a copy of the the laps for analysis.
 	 * 
-	 * @return a mapping of the run number to the lap during which it was created
+	 * @param predicate to filter the list through
+	 * 
+	 * @return a {@code LapList} containing {@link Lap}s filtered through the predicate
 	 */
-	Map<Integer, Lap> getIDLapMap();
+	LapList filterLaps(LapPredicate predicate);
+	
+	
+	/**
+	 * Method to 
+	 * @param floor
+	 * @param ceelingEXCLUSIVE
+	 * @return
+	 */
+	LapList subList(int floor, int ceelingEXCLUSIVE);
 	
 	/**********************************************************************************************
 	 *                                                                                            *
@@ -145,6 +178,21 @@ public interface LapList {
 		return getSummaryStatistics().getSum();
 	}
 	
-	
+	/**********************************************************************************************
+	 *                                                                                            *
+	 *                                       MISC METHODS                                         *
+	 *                                                                                            *
+	 *********************************************************************************************/
+	 
+	/**
+	 * Combines two {@code LapList} objects and returns a new object. Note, any implementation of
+	 * this method should leave this object in tact and simply return a new object.
+	 * 
+	 * @param otherLapList the {@code LapList} to combine with
+	 * 
+	 * @return a new {@code LapList} instance representing the combination of this object and the
+	 *         other
+	 */
+	LapList combine(LapList otherLapList);
 	
 }

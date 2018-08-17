@@ -85,4 +85,29 @@ public class AbstractLapList implements LapList, Serializable {
 		
 		return tempLap;
 	}
+	public static void main(String[] args) {}
+
+	@Override
+	public double[] getAsFilteredDoubleArray(LapPredicate predicate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LapList filterLaps(LapPredicate predicate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LapList subList(int floor, int ceelingEXCLUSIVE) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LapList combine(LapList otherLapList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

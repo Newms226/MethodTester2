@@ -37,8 +37,13 @@ public abstract class AbstractLap implements Lap {
 	}
 
 	@Override
-	public boolean queryAverageBased(AverageBinaryFunction averageBasedBinaryFunction) {
+	public boolean queryAverageBased(LapPredicate averageBasedBinaryFunction) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public String toString() {
+		return getID() + ": "  + getElapsed() + (deviationCalculated() ? " σ²: " + getDeviation() 
+	                                                                   : "");
 	}
 }
