@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class AbstractLapList implements LapList, Serializable {
 	private static final long serialVersionUID = -2578975472803867444L;
@@ -53,14 +54,13 @@ public class AbstractLapList implements LapList, Serializable {
 	@Override
 	public List<Lap> getLaps() {
 		ArrayList<Lap> toReturn = new ArrayList<Lap>((int)getCount());
-		for (Lap l: laps) toReturn.add(new ImmutableLap(l.getElapsed()));
+		for (Lap l: laps) toReturn.add(new RaceLap(l.getElapsed()));
 		return toReturn;
 	}
 
 	@Override
 	public Map<Integer, Lap> getIDLapMap() {
-		// TODO Auto-generated method stub
-		return null;
+		return laps.stream().collect(Collectors.toMap(Lap::getID, lap -> {return lap;}));
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class AbstractLapList implements LapList, Serializable {
 
 	@Override
 	public Lap lap(long elapsed) throws LapRangeException {
-		tempLap = new ImmutableLap(elapsed); // throws LapRangeException
+		tempLap = new RaceLap(elapsed); // throws LapRangeException
 		summaryStatistics.accept(elapsed);
 		laps.add(tempLap);
 		

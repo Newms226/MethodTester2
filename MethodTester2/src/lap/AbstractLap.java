@@ -2,20 +2,32 @@ package lap;
 
 import java.util.function.Predicate;
 
-public abstract class AbstractLap implements Lap {
+import tools.NumberTools;
 
-	private long elapased;
-	private double deviation;
+abstract class AbstractLap implements Lap {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 216886856997130633L;
 	
-	public AbstractLap(long startLap, long endLap) throws LapRangeException {
-		this(endLap - startLap);
+	protected long elapased;
+	
+	protected long deviation;
+	
+	protected boolean deviationCalculated;
+	
+	private int ID;
+	
+	public AbstractLap(int ID, long startLap, long endLap) throws LapRangeException {
+		this(ID, endLap - startLap);
 	}
 	
-	public AbstractLap(long elapsed) throws LapRangeException {
+	public AbstractLap(int ID, long elapsed) throws LapRangeException {
 		LapRangeException.assertValid(elapsed);
 		
 		this.elapased = elapsed;
-		deviation = Double.NaN;
+		this.ID = ID;
 	}
 
 	@Override
@@ -32,18 +44,35 @@ public abstract class AbstractLap implements Lap {
 
 	@Override
 	public long getDeviation(double averageValue) {
-		return Math.round(averageValue < elapased ? elapased - averageValue 
-				                                  : averageValue - elapased);
+		deviationCalculated = true;
+		deviation = Math.round(averageValue < elapased ? elapased - averageValue 
+                : averageValue - elapased);
+		return deviation;
 	}
 
 	@Override
-	public boolean queryAverageBased(LapPredicate averageBasedBinaryFunction) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deviationCalculated() {
+		return deviationCalculated;
+	}
+
+	@Override
+	public long getDeviation() {
+		return deviation;
+	}
+
+	@Override
+	public int getID() {
+		return ID;
+	}
+
+	@Override
+	public boolean query(LapPredicate predicate) {
+		return predicate.test(this);
 	}
 	
+	@Override
 	public String toString() {
-		return getID() + ": "  + getElapsed() + (deviationCalculated() ? " σ²: " + getDeviation() 
-	                                                                   : "");
+		return NumberTools.format(ID) + ": " + Lap.nanosecondsToString(elapased) 
+			+ (deviationCalculated ? " σ²: " + NumberTools.format(deviation) : "");
 	}
 }

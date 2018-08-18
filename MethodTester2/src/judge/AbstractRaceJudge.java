@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import contestant.Contender;
+import contestant.TiedContender;
 import lap.JudgedLapList;
 import lap.Lap;
+import lap.LapList;
+import lap.LapPredicate;
 
 public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 	
@@ -32,8 +35,6 @@ public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 	
 	private int[] winners;
 	
-	private transient LapResult[] lapResults;
-	
 	private Map<Integer, Contender> IDMap;
 	
 	private boolean started;
@@ -44,8 +45,24 @@ public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 	
 	private int tieCount;
 
-	public AbstractRaceJudge() {
+	public AbstractRaceJudge(String name) {
+		super(name);
 		IDMap = new HashMap<>();
+	}
+	
+	/**********************************************************************************************
+	 *                                                                                            *
+	 *                                   PROCEDURE METHODS                                        *
+	 *                                                                                            *
+	 **********************************************************************************************/
+	
+	@Override
+	public Lap lap(Contender contestant, long elapsed) throws IllegalArgumentException {
+		if (elapsed < 0) {
+			throw new IllegalArgumentException("Elapsed cannot be negative: " + elapsed);
+		}
+		
+		return contenderMap.get(contestant).lap(elapsed);
 	}
 	
 	@Override
@@ -60,32 +77,6 @@ public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 		
 	}
 	
-	private void register(Contender contender) {
-		contenderMap.put(contender, new JudgedLapList());
-		contender.setID(count);
-		IDMap.put(new Integer(count), contender);
-		count++;
-	}
-
-	private void ensureNotStarted(String cause) {
-		if (started) {
-			throw new RaceProcedureException("Race has already started. " + cause);
-		}
-	}
-
-	@Override
-	public Lap lap(Contender contestant, long elapsed) throws IllegalArgumentException {
-		lapResults[contestant.getID()].setElapsed(elapsed);
-		
-		return contenderMap.get(contestant).lap(elapsed);
-	}
-	
-	@Override
-	public boolean isStarted() {return started;}
-	
-	@Override
-	public boolean isEnded() {return ended;}
-
 	@Override
 	public void start() {
 		ensureNotStarted("Cannot start an already started race");
@@ -95,14 +86,7 @@ public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 		}
 		
 		started = true;
-		
-		lapResults = new LapResult[count];
-		for (int i = 0; i < count; i++) {
-			lapResults[i] = new LapResult(i);
-		}
-		
 		winners = new int[count];
-		
 	}
 
 	@Override
@@ -112,29 +96,39 @@ public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 		}
 		
 		
-		raceRan = true;
+		raceRan = ended = true;
 	}
-
-	
-	private int winnerID;
 	
 	@Override
-	public Contender getLapWinner() {
-		Arrays.sort(lapResults);
-		
-		if (lapResults[0] == lapResults[1]) {
-			tieCount++;
-			return new TiedContender();
-		}
-		
-		winnerID = lapResults[0].ID;
-		winners[winnerID]++;
-		
-		return IDMap.get(winnerID);
-	}
-
+	public boolean isStarted() {return started;}
+	
+	@Override
+	public boolean isEnded() {return ended;}
+	
+	/**********************************************************************************************
+	 *                                                                                            *
+	 *                                     ANALYSIS METHODS                                       *
+	 *                                                                                            *
+	 **********************************************************************************************/
+	
 	@Override
 	public Contender getTotalWinner() {
+		if (!raceRan) {
+			throw new RaceProcedureException("Race was never ran");
+		}
+		if (!ended) {
+			throw new RaceProcedureException("Cannot get total winner if race has not finished");
+		}
+		
+		Map<Integer, LapList> lapResultMap = 
+		
+		
+		
+		
+		
+		
+		int winnerID;
+
 		// TODO: Ensure ended!
 		winnerID = 0;
 		
@@ -149,4 +143,73 @@ public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 		return IDMap.get(winnerID);
 	}
 
+	@Override
+	public void analyizeFrom(Map<Contender, LapList> contenders) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getSummary() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFullResults() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Judge filter(LapPredicate predicate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**********************************************************************************************
+	 *                                                                                            *
+	 *                                      HELPER METHODS                                        *
+	 *                                                                                            *
+	 **********************************************************************************************/
+	
+	private void register(Contender contender) {
+		contenderMap.put(contender, new JudgedLapList());
+		contender.setID(count);
+		IDMap.put(new Integer(count), contender);
+		count++;
+	}
+
+	private void ensureNotStarted(String cause) {
+		if (started) {
+			throw new RaceProcedureException("Race has already started. " + cause);
+		}
+	}
+
+
+	
+
+
+	
+
+		
+
+
+	
+
 }
+
+//@Override
+//public Contender getLapWinner() {
+//	Arrays.sort(lapResults);
+//	
+//	if (lapResults[0] == lapResults[1]) {
+//		tieCount++;
+//		return new TiedContender();
+//	}
+//	
+//	winnerID = lapResults[0].ID;
+//	winners[winnerID]++;
+//	
+//	return IDMap.get(winnerID);
+//}

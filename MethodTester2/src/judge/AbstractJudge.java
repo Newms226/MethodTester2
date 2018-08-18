@@ -21,38 +21,16 @@ abstract class AbstractJudge implements Judge {
 	
 	protected int count;
 	
-	public final String name;
+	private String name;
 	
 	/**
 	 * No-Arg constructor for serialization of subclasses.
 	 */
+	public AbstractJudge() {}
+	
 	public AbstractJudge(String name) {
 		contenderMap = new HashMap<Contender, JudgedLapList>();
 		this.name = name;
-	}
-
-	@Override
-	public String getSummary() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getFullResults() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void analyizeFrom(Collection<Contender> contenders) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Judge filter(LapPredicate predicate) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**

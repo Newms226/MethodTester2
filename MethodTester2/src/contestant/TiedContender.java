@@ -1,5 +1,4 @@
-import contestant.Contender;
-
+package contestant;
 public class TiedContender implements Contender {
 
 	public TiedContender() {

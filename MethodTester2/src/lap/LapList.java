@@ -106,6 +106,8 @@ public interface LapList extends Cloneable, Serializable {
 	 */
 	LapList subList(int floor, int ceelingEXCLUSIVE);
 	
+	Map<Integer, Lap> getIDLapMap();
+	
 	/**********************************************************************************************
 	 *                                                                                            *
 	 *                              SUMMARY STATISTICS METHODS                                    *
@@ -122,7 +124,7 @@ public interface LapList extends Cloneable, Serializable {
 	 * Returns the total count of the laps in this object
 	 * <p>
 	 * <strong>NOTE:</strong> This method should be overwritten by any class which does not use a 
-	 * {@code LongSummaryStatistics} object under the hood to avoid expensive overhead.
+	 * {@code LongSummaryStatistics} object under the hood to avoid VERY expensive overhead.
 	 *  
 	 * @return the count of the laps in this object
 	 */
@@ -142,29 +144,29 @@ public interface LapList extends Cloneable, Serializable {
 		return getSummaryStatistics().getAverage();
 	}
 	
-	/**
-	 * Returns the maximum value contained in this list
-     * <p>
-	 * <strong>NOTE:</strong> This method should be overwritten by any class which does not use a 
-	 * {@code LongSummaryStatistics} object under the hood to avoid expensive overhead.
-	 * 
-	 * @return the maximum value contained in this list, 0 if no laps are recorded
-	 */
-	default long getMax() {
-		return getSummaryStatistics().getMax();
-	}
-	
-	/**
-	 * Returns the minimum value contained in this list.
-	 * <p>
-	 * <strong>NOTE:</strong> This method should be overwritten by any class which does not use a 
-	 * {@code LongSummaryStatistics} object under the hood to avoid expensive overhead.
-	 * 
-	 * @return the minimum value contained in this list, 0 if no laps are recorded
-	 */
-	default long getMin() {
-		return getSummaryStatistics().getMin();
-	}
+//	/**
+//	 * Returns the maximum value contained in this list
+//     * <p>
+//	 * <strong>NOTE:</strong> This method should be overwritten by any class which does not use a 
+//	 * {@code LongSummaryStatistics} object under the hood to avoid expensive overhead.
+//	 * 
+//	 * @return the maximum value contained in this list, 0 if no laps are recorded
+//	 */
+//	default long getMax() {
+//		return getSummaryStatistics().getMax();
+//	}
+//	
+//	/**
+//	 * Returns the minimum value contained in this list.
+//	 * <p>
+//	 * <strong>NOTE:</strong> This method should be overwritten by any class which does not use a 
+//	 * {@code LongSummaryStatistics} object under the hood to avoid expensive overhead.
+//	 * 
+//	 * @return the minimum value contained in this list, 0 if no laps are recorded
+//	 */
+//	default long getMin() {
+//		return getSummaryStatistics().getMin();
+//	}
 	
 	/**
 	 * Returns the sum of all the values contained in this list.
@@ -194,5 +196,17 @@ public interface LapList extends Cloneable, Serializable {
 	 *         other
 	 */
 	LapList combine(LapList otherLapList);
+
+	/**
+	 * Returns the <strong>pre-calculated</strong> average variance from the mean of this 
+	 * {@code LapSet}
+	 *  
+	 * @return the average variance of this {@code LapSet}
+	 */
+	double getAverageVariance();
+	
+	List<Lap> getMin();
+	
+	List<Lap> getMax();
 	
 }

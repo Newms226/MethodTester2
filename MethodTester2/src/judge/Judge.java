@@ -10,6 +10,7 @@ import contestant.Contender;
 import lap.Lap;
 import lap.LapList;
 import lap.LapPredicate;
+import result.ResultSet;
 import tools.FileTools;
 import tools.NumberTools;
 import tools.SerialTools;
@@ -109,7 +110,7 @@ public interface Judge extends Serializable, Cloneable {
 	 * @throws RaceProcedureException if the contract defined by the {@link Judge} interface has been 
 	 *         violated.
 	 */
-	void analyizeFrom(Collection<Contender> contenders);
+	void analyizeFrom(Collection<ResultSet> contenders);
 	
 	/**
 	 * Method should return a simple summary of the results, noting the winner & the percent they

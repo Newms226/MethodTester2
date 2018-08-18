@@ -99,20 +99,20 @@ public interface RaceJudge extends Judge {
 		return isStarted() && (!isEnded());
 	}
 	
-	/**
-	 * Method to call after each lap which decides the winner of the lap. Note that there is no 
-	 * functional requirement to this method, an implementation may choose to decide the winner
-	 * of each lap once the race has finished. 
-	 * 
-	 * <p>
-	 * Custom implementations of this interface should use this method to examine the results of the
-	 * races and decide a winner. This projects implementations regard the winner of the total race
-	 * as the {@code Contender} who wins the most lap <strong>NOT</strong> the {@link Contender}
-	 * who has the lowest average time. While this is the contract specified by this interface,
-	 * their is no functional requirement to it.
-	 * 
-	 * @return {@code Contender} who had the slowest elapsed time over a single lap
-	 */
-	Contender getLapWinner();
+//	/**
+//	 * Method to call after each lap which decides the winner of the lap. Note that there is no 
+//	 * functional requirement to this method, an implementation may choose to decide the winner
+//	 * of each lap once the race has finished. 
+//	 * 
+//	 * <p>
+//	 * Custom implementations of this interface should use this method to examine the results of the
+//	 * races and decide a winner. This projects implementations regard the winner of the total race
+//	 * as the {@code Contender} who wins the most lap <strong>NOT</strong> the {@link Contender}
+//	 * who has the lowest average time. While this is the contract specified by this interface,
+//	 * their is no functional requirement to it.
+//	 * 
+//	 * @return {@code Contender} who had the slowest elapsed time over a single lap
+//	 */
+//	Contender getLapWinner();
 
 }
