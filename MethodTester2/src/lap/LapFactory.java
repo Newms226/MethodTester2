@@ -4,9 +4,13 @@ public class LapFactory {
 
 	private LapFactory() {}
 	
-	Lap getGenericLap(long elapsed) {
+	public static Lap from(long elapsed) {
 		// TODO
 		return null;
+	}
+	
+	public static <T extends Lap> T getGenericLap(long elapsed) {
+		return new
 	}
 
 }
