@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import contestant.Contender;
-import lap.JudgedLapList;
 import lap.Lap;
-import lap.LapList;
 import lap.LapPredicate;
+import laplist.JudgedLapList;
+import laplist.LapList;
 
 abstract class AbstractJudge implements Judge {
 	

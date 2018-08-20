@@ -6,10 +6,10 @@ import java.util.Map;
 
 import contestant.Contender;
 import contestant.TiedContender;
-import lap.JudgedLapList;
 import lap.Lap;
-import lap.LapList;
 import lap.LapPredicate;
+import laplist.JudgedLapList;
+import laplist.LapList;
 
 public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 	
@@ -180,11 +180,7 @@ public class AbstractRaceJudge extends AbstractJudge implements RaceJudge {
 		count++;
 	}
 
-	private void ensureNotStarted(String cause) {
-		if (started) {
-			throw new RaceProcedureException("Race has already started. " + cause);
-		}
-	}
+
 
 
 	

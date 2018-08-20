@@ -1,4 +1,4 @@
-package lap;
+package laplist;
 
 public class JudgedLapList extends AbstractLapList {
 

@@ -5,8 +5,16 @@ import java.util.List;
 
 import contestant.Contender;
 import lap.Lap;
-import lap.LapList;
+import laplist.LapList;
 
+/**
+ * Consists of 
+ *   - Contender
+ *   - LapSet
+ *   - Win count
+ * @author Michael
+ *
+ */
 public interface ResultSet extends Comparable<ResultSet>, Serializable, Cloneable {
 	
 	Contender getContender();

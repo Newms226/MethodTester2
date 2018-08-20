@@ -8,8 +8,9 @@ import java.util.Map;
 
 import contestant.Contender;
 import lap.Lap;
-import lap.LapList;
 import lap.LapPredicate;
+import laplist.LapList;
+import result.JudgedOutcome;
 import result.ResultSet;
 import tools.FileTools;
 import tools.NumberTools;
@@ -57,12 +58,15 @@ public interface Judge extends Serializable, Cloneable {
 	 */
 	void register(Contender contender, Contender...contenders);
 	
+	JudgedOutcome judge(LapPredicate lapAccepter, AnalysisScheme judgingScheme, Collection
+	
 	/**
 	 * Method to call at the end of the race which decides the total winner based upon the amount
 	 * of <strong>laps</strong> won, NOT the smallest average time.
 	 * 
 	 * @return {@link Contender} who won the whole race
 	 */
+	@Deprecated
 	Contender getTotalWinner();
 	
 	/**********************************************************************************************
@@ -110,7 +114,7 @@ public interface Judge extends Serializable, Cloneable {
 	 * @throws RaceProcedureException if the contract defined by the {@link Judge} interface has been 
 	 *         violated.
 	 */
-	void analyizeFrom(Collection<ResultSet> contenders);
+//	void analyizeFrom(Collection<ResultSet> contenders);
 	
 	/**
 	 * Method should return a simple summary of the results, noting the winner & the percent they

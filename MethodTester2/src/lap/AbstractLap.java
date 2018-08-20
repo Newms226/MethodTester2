@@ -15,15 +15,19 @@ abstract class AbstractLap implements Lap {
 	
 	protected long deviation;
 	
+	protected long timestamp;
+	
 	protected boolean deviationCalculated;
 	
-	private int ID;
+	public AbstractLap() {}
 	
-	public AbstractLap(int ID, long startLap, long endLap) throws LapRangeException {
+	public AbstractLap(Number ID, long startLap, long endLap) throws LapRangeException {
 		this(ID, endLap - startLap);
 	}
 	
-	public AbstractLap(int ID, long elapsed) throws LapRangeException {
+	public AbstractLap(Number ID, long elapsed) throws LapRangeException {
+		timestamp = System.currentTimeMillis();
+		
 		LapRangeException.assertValid(elapsed);
 		
 		this.elapased = elapsed;
@@ -59,20 +63,15 @@ abstract class AbstractLap implements Lap {
 	public long getDeviation() {
 		return deviation;
 	}
-
-	@Override
-	public int getID() {
-		return ID;
-	}
-
-	@Override
-	public boolean query(LapPredicate predicate) {
-		return predicate.test(this);
-	}
 	
 	@Override
 	public String toString() {
-		return NumberTools.format(ID) + ": " + Lap.nanosecondsToString(elapased) 
-			+ (deviationCalculated ? " σ²: " + NumberTools.format(deviation) : "");
+		return getIDString() + ": " + Laps.nanosecondsToString(elapased) 
+				+ (deviationCalculated ? " σ²: " + NumberTools.format(deviation) : "");
+	}
+
+	@Override
+	public long getTimestamp() {
+		return timestamp;
 	}
 }
