@@ -2,6 +2,8 @@ package lap;
 
 import java.util.function.Predicate;
 
+import lap.Lap;
+
 /**
  * Queries a Lap through the {@link Predicate} interface.
  * 

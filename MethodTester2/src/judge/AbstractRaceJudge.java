@@ -7,7 +7,7 @@ import java.util.Map;
 import contestant.Contender;
 import contestant.TiedContender;
 import lap.Lap;
-import lap.LapPredicate;
+import lap2.LapPredicate;
 import laplist.JudgedLapList;
 import laplist.LapList;
 

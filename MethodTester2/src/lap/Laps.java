@@ -16,17 +16,23 @@ public class Laps {
 	/**
 	 * Default seconds format object
 	 */
-	public static DecimalFormat secondsFormat = new DecimalFormat("#,##0.000000");
+	public static final DecimalFormat secondsFormat = new DecimalFormat("#,##0.000000");
 	
 	/**
 	 * Default nanoseconds format object
 	 */
-	public static DecimalFormat nanosecondsFormat = new DecimalFormat("#,##0");
+	public static final DecimalFormat nanosecondsFormat = new DecimalFormat("#,##0");
 	
 	/**
 	 * The conversion rate from nanoseconds to seconds
 	 */
-	public static double nanoConversionRate = Math.pow(10, 9);
+	public static final double nanoConversionRate = Math.pow(10, 9);
+	
+	/**
+	 * An empty, generic lap.
+	 */
+	public static final Lap EMPTY_LAP = new GenericLap(0);
+	
 	
 	/**
 	 * After this value, nanoseconds will print as a partial second (ex. 0.2345). Value is 
@@ -39,16 +45,6 @@ public class Laps {
 	 *                                       COMPARATORS                                          *
 	 *                                                                                            *
 	 **********************************************************************************************/
-	
-	/**
-	 * Ordering by the value returned by {@link Lap#getID()}
-	 */
-	public static final Comparator<Lap> ID_ORDER = 
-			(a, b) -> {
-				if (a.getID() < b.getID()) return -1;
-				if (a.getID() > b.getID()) return 1;
-				return 0;
-			};
 	
 	/**
 	 * Ordering by the value returned by {@link Lap#getElapsed()}

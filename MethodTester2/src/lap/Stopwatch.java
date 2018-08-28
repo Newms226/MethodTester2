@@ -1,6 +1,6 @@
 package lap;
 
-public class Stopwatch implements Lap {
+public class Stopwatch extends AbstractLap {
 	
 	/**
 	 * 
@@ -11,79 +11,43 @@ public class Stopwatch implements Lap {
 	
 	private long endLap;
 	
-	private long elapsed;
+	private GenericContext context;
 
 	public Stopwatch() {
-		startLap = System.nanoTime();
+		context = new GenericContext(this);
 	}
 	
-	public Stopwatch(long initalTime) {
+	public Stopwatch(long initalTime) throws LapRangeException {
 		LapRangeException.assertValid(initalTime);
+		context = new GenericContext(this);
 		
 		startLap = initalTime;
 	}
 	
-	public long end() {
+	public void start() {
+		startLap = System.nanoTime();
+	}
+	
+	public long end() throws LapRangeException {
 		endLap = System.nanoTime();
-		elapsed = endLap - startLap;
+		elapased = endLap - startLap;
 		
-		LapRangeException.assertValid(elapsed);
+		LapRangeException.assertValid(elapased);
 		
-		return elapsed;
+		return elapased;
 	}
 
 	@Override
-	public int compareTo(Lap o) {
-		// TODO Auto-generated method stub
-		return 0;
+	public LapContext getContext() {
+		return context;
 	}
-
+	
 	@Override
-	public long getElapsed() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public long getDeviation(double averageValue) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean deviationCalculated() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public long getDeviation() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Lap clone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long getTimestamp() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean isSequential() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getIDString() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return Laps.nanosecondsToString(elapased)
+				+ (stats.isDevationFromStandardCalculated() 
+						? " σ: " + Laps.nanosecondsToString(stats.getDeviationFromStandard())
+						: "");
 	}
 
 }

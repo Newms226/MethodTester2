@@ -14,6 +14,7 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import lap.Lap;
@@ -23,9 +24,19 @@ public class AbstractLapList implements LapList, Serializable {
 	public static final int DEFAULT_SIZE = 1_000,
 			                MAX_SIZE = Integer.MAX_VALUE - 8;
 	
-	private LongSummaryStatistics summaryStatistics;
+	private SummaryStatistics summaryStatistics;
+	
 	private ArrayList<Lap> laps;
+	
 	private Lap tempLap;
+	
+	private long fastestTime;
+	
+	private List<Lap> fastestLaps;
+	
+	private long slowestTime;
+	
+	private List<Lap> slowestLaps;
 
 	
 	/**
@@ -50,8 +61,14 @@ public class AbstractLapList implements LapList, Serializable {
 	 *                                  constructor
 	 */
 	public AbstractLapList(int initialSize) throws IllegalArgumentException {
-		summaryStatistics = new LongSummaryStatistics();
+		summaryStatistics = new SummaryStatistics();
 		laps = new ArrayList<>(initialSize);
+		
+		slowestLaps = new ArrayList<>();
+		fastestLaps = new ArrayList<>();
+		
+		slowestTime = 0;
+		fastestTime = Long.MAX_VALUE;
 	}
 	
 	/**********************************************************************************************
@@ -64,8 +81,28 @@ public class AbstractLapList implements LapList, Serializable {
 	public void accept(Lap lap) throws NullPointerException {
 		Objects.requireNonNull(lap);
 		
-		summaryStatistics.accept(lap.getElapsed());
+		summaryStatistics.addValue(lap.getElapsed());
 		laps.add(tempLap);
+		
+		maintain(lap);
+	}
+	
+	private void maintain(Lap lap) {
+		if (fastestTime > lap.getElapsed()) {
+			fastestTime = lap.getElapsed();
+			fastestLaps = new ArrayList<>();
+			fastestLaps.add(lap);
+		} else if (fastestTime == lap.getElapsed()) {
+			fastestLaps.add(lap);
+		}
+		
+		if (slowestTime < lap.getElapsed()) {
+			slowestTime = lap.getElapsed();
+			slowestLaps = new ArrayList<>();
+			slowestLaps.add(lap);
+		} else if (slowestTime == lap.getElapsed()) {
+			slowestLaps.add(lap);
+		}
 	}
 
 	/**********************************************************************************************
@@ -75,55 +112,68 @@ public class AbstractLapList implements LapList, Serializable {
 	 **********************************************************************************************/
 	
 	@Override
-	public boolean contains(long elapsed) {
-		// TODO Auto-generated method stub
+	public boolean contains(Lap lap, Comparator<Lap> comparator) {
+		if (lap == null) return false;
+		
+		for (Lap l: laps) {
+			if (comparator.compare(lap, l) == 0) return true;
+		}
+		
+		// else
 		return false;
 	}
 	
 	@Override
-	public boolean contains(Lap lap, Comparator<Lap> comparator) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int indexOf(Lap lap, Comparator<Lap> comparator) {
-		// TODO Auto-generated method stub
-		return 0;
+	public Lap get(int i) throws ArrayIndexOutOfBoundsException {
+		return laps.get(i);
 	}
 
 	@Override
 	public int nextIndexOf(Lap lap, int indexExlusive, Comparator<Lap> comparator) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (lap == null) return -1;
+		
+		for (int i = indexExlusive + 1; i < size(); i++) {
+			if (comparator.compare(laps.get(i), lap) == 0) return i;
+		}
+		
+		// else
+		return -1;
 	}
 
 	@Override
 	public int lastIndexOf(Lap lap, Comparator<Lap> comparator) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	@Override
-	public Lap get(Lap lap, Comparator<Lap> comparator) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public Lap getID(int ID) {
-		// TODO Auto-generated method stub
-		return null;
+		if (lap == null) return -1;
+		
+		for (int i = size() - 1; i >= 0; i++) {
+			if (comparator.compare(laps.get(i), lap) == 0) return i;
+		}
+		
+		return -1;
 	}
 	
 	@Override
 	public Iterator<Lap> iterator() {
-		return laps.iterator();
+		return new LapIterator();
 	}
 
 	@Override
 	public Stream<Lap> stream() {
 		return laps.stream();
+	}
+	
+	private class LapIterator implements Iterator<Lap> {
+		private int index;
+
+		@Override
+		public boolean hasNext() {
+			return index < size();
+		}
+
+		@Override
+		public Lap next() {
+			return laps.get(index++);
+		}
+		
 	}
 
 	/**********************************************************************************************
@@ -134,19 +184,32 @@ public class AbstractLapList implements LapList, Serializable {
 	
 	@Override
 	public SummaryStatistics getSummaryStatistics() {
-		// TODO Auto-generated method stub
-		return null;
+		return summaryStatistics;
 	}
 	
 	public List<Lap> getQuickestLaps() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.unmodifiableList(fastestLaps);
 	}
 
 	@Override
 	public List<Lap> getSlowestLaps() {
+		return Collections.unmodifiableList(slowestLaps);
+	}
+
+	@Override
+	public List<Lap> elements() {
+		return Collections.unmodifiableList(laps);
+	}
+
+	@Override
+	public int size() {
+		return laps.size();
+	}
+
+	@Override
+	public double getDeviationFrom(double averageValue) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 }

@@ -1,5 +1,7 @@
 package lap;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.function.Predicate;
 
 import tools.NumberTools;
@@ -13,25 +15,23 @@ abstract class AbstractLap implements Lap {
 	
 	protected long elapased;
 	
-	protected long deviation;
-	
 	protected long timestamp;
 	
-	protected boolean deviationCalculated;
+	protected LapStatistics stats;
 	
 	public AbstractLap() {}
 	
-	public AbstractLap(Number ID, long startLap, long endLap) throws LapRangeException {
-		this(ID, endLap - startLap);
+	public AbstractLap(long startLap, long endLap) throws LapRangeException {
+		this(endLap - startLap);
 	}
 	
-	public AbstractLap(Number ID, long elapsed) throws LapRangeException {
+	public AbstractLap(long elapsed) throws LapRangeException {
 		timestamp = System.currentTimeMillis();
 		
 		LapRangeException.assertValid(elapsed);
 		
 		this.elapased = elapsed;
-		this.ID = ID;
+		stats = new LapStatistics(this);
 	}
 
 	@Override
@@ -47,31 +47,35 @@ abstract class AbstractLap implements Lap {
 	}
 
 	@Override
-	public long getDeviation(double averageValue) {
-		deviationCalculated = true;
-		deviation = Math.round(averageValue < elapased ? elapased - averageValue 
-                : averageValue - elapased);
-		return deviation;
+	public Duration getAsDuration() {
+		return Duration.ofNanos(elapased);
 	}
 
 	@Override
-	public boolean deviationCalculated() {
-		return deviationCalculated;
+	public long getTimeStampMills() {
+		return timestamp;
 	}
 
 	@Override
-	public long getDeviation() {
-		return deviation;
+	public Instant getTimeStampInstant() {
+		return Instant.ofEpochMilli(timestamp);
+	}
+
+	@Override
+	public LapStatistics getLapStats() {
+		return stats;
 	}
 	
 	@Override
 	public String toString() {
-		return getIDString() + ": " + Laps.nanosecondsToString(elapased) 
-				+ (deviationCalculated ? " σ²: " + NumberTools.format(deviation) : "");
+		return getContext().getIDString() + ": " + Laps.nanosecondsToString(elapased)
+			+ (stats.isDevationFromStandardCalculated() 
+					? " σ: " + Laps.nanosecondsToString(stats.getDeviationFromStandard())
+					: "");
 	}
-
+	
 	@Override
-	public long getTimestamp() {
-		return timestamp;
+	public Lap clone() {
+		return new GenericLap(getElapsed());
 	}
 }

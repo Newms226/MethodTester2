@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import contestant.Contender;
 import lap.Lap;
 import lap.LapPredicate;
 import laplist.LapList;
-import result.JudgedOutcome;
+import result.RaceOutcome;
 import result.ResultSet;
 import tools.FileTools;
 import tools.NumberTools;
@@ -58,7 +59,9 @@ public interface Judge extends Serializable, Cloneable {
 	 */
 	void register(Contender contender, Contender...contenders);
 	
-	JudgedOutcome judge(LapPredicate lapAccepter, AnalysisScheme judgingScheme, Collection
+	RaceOutcome judge(LapPredicate lapAccepter, 
+	                    AnalysisScheme judgingScheme,
+	                    List<? extends JudgeableContender> contenders);
 	
 	/**
 	 * Method to call at the end of the race which decides the total winner based upon the amount
@@ -116,41 +119,7 @@ public interface Judge extends Serializable, Cloneable {
 	 */
 //	void analyizeFrom(Collection<ResultSet> contenders);
 	
-	/**
-	 * Method should return a simple summary of the results, noting the winner & the percent they
-	 * won by, plus other summary information.
-	 * 
-	 * @return a summary of the results judged.
-	 */
-	String getSummary();
 	
-	/**
-	 * Method should return all the information it has calculated on the race. Note that the 
-	 * {@link LapSet} objects have methods for an object-oriented analysis of the results.
-	 * 
-	 * @return a {@code String} representing all of the data the judge has on the outcome.
-	 */
-	String getFullResults();
-	
-	/**
-	 * Method to filter down the {@link LapSet} objects this judge is currently managing according 
-	 * to the {@link LapPredicate} passed into it. All implementations of this method should 
-	 * return a <strong>new</strong> {@code Judge} object, instead of filtering the results
-	 * contained in this race.
-	 * 
-	 * @param predicate to filter the {@link Lap}s through.
-	 * 
-	 * @return a new {@code Judge} instance for examination.
-	 */
-	Judge filter(LapPredicate predicate);
-	
-	/**
-	 * Method to extract the {@link LapSet}s monitored by the judge. Essentially, this method 
-	 * de-couples the {@link CoupledContender} objects it monitors. 
-	 * 
-	 * @return
-	 */
-	Map<Contender, LapList> extractResults();
 	
 	/**********************************************************************************************
 	 *                                                                                            *
