@@ -1,10 +1,13 @@
 package lap;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
-public interface LapListAbstraction {
+import round.CSV;
+
+public interface LapListAbstraction extends CSV, Serializable {
 	
 	String getName();
 	

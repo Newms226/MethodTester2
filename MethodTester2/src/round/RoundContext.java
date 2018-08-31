@@ -1,6 +1,7 @@
 package round;
 
 import java.awt.image.IndexColorModel;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -30,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  * @author Michael Newman
  *
  */
-public final class RoundContext {
+public final class RoundContext implements Serializable {
 	private static final Logger log = LogManager.getLogger();
 	
 	/**

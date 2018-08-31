@@ -74,9 +74,10 @@ public final class RoundList implements RoundListAbstraction {
 		return context;
 	}
 
-	// TODO: This is very labour intensive for something much easier accomplished with a simplier data sctructure
 	@Override
-	public void lap(String str, LapAbstraction lap) {
+	public void lap(String str, LapAbstraction lap) 
+			throws IndexOutOfBoundsException, NullPointerException 
+	{
 		log.traceEntry("lap({}, {}) for round {}", Objects.requireNonNull(str), 
 				Objects.requireNonNull(lap), roundNumber);
 		roundRangeCheck(roundNumber); // ensure no lapping after runFor passed
@@ -93,6 +94,9 @@ public final class RoundList implements RoundListAbstraction {
 		// set value;
 		laps[roundNumber][offSet] = lap;
 		additions++;
+		
+		// consume lap elapsed into proper SummaryStatistics object
+		summaryStats[offSet].addValue(lap.getElapsed());
 		
 		// reset additions count
 		if (additions == count) {
@@ -179,5 +183,11 @@ public final class RoundList implements RoundListAbstraction {
 		int x = 0;
 		System.out.println((x++) + "");
 		System.out.println(x);
+	}
+
+	@Override
+	public String toCSV() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

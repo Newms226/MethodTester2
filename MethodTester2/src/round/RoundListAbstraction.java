@@ -1,5 +1,6 @@
 package round;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -13,7 +14,7 @@ import lap.LapListAbstraction;
  * @author Michael
  *
  */
-public interface RoundListAbstraction {
+public interface RoundListAbstraction extends CSV, Serializable {
 	
 	Iterator<LapAbstraction> iterator(String str);
 	
