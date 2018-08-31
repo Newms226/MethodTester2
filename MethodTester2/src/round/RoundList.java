@@ -2,6 +2,7 @@ package round;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import lap.Lap;
 import lap.LapAbstraction;
 import lap.LapListAbstraction;
 import tools.NumberTools;
@@ -77,8 +79,10 @@ public final class RoundList implements RoundListAbstraction {
 
 	@Override
 	public void lap(String str, LapAbstraction lap) {
-		log.traceEntry("lap({}, {})", str, lap);
+		log.traceEntry("lap({}, {})", Objects.requireNonNull(str), 
+				Objects.requireNonNull(lap));
 		int index = context.getMapping(str + currentBaseIndex);
+		indexRangeCheck(index);
 		
 		// look out for setting previously non-null objects
 		if (laps[index] != null) {
@@ -89,18 +93,20 @@ public final class RoundList implements RoundListAbstraction {
 		
 		// set value;
 		laps[index] = lap;
-		log.traceExit("Set " + str + "'s lap as");
+		
+		// reset additions count
+		if (additions == count) {
+			additions = 0;
+			currentBaseIndex += count;
+		}
+		
+		log.traceExit("Set " + str + "'s lap as " 
+				+ NumberTools.format(index / runFor));
 	}
 
 	@Override
 	public void lap(String str, long elapsed) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isNanoSecondPrecise() {
-		return nanoSecondPrecise;
+		lap(str, Lap.from(elapsed));
 	}
 
 	@Override
@@ -144,6 +150,14 @@ public final class RoundList implements RoundListAbstraction {
 					"Invalid round number. Max: = " 
 					+ NumberTools.format(runFor) + " Entered: " 
 					+ NumberTools.format(round)));
+	}
+	
+	private void indexRangeCheck(int index) throws IndexOutOfBoundsException {
+		if (index >= maxIndex)
+			throw log.throwing(new IndexOutOfBoundsException(
+					"Invalid index number. Max: = " 
+					+ NumberTools.format(maxIndex) + " Entered: " 
+					+ NumberTools.format(index)));
 	}
 	
 	private class LapBasedRoundIterator implements Iterator<LapAbstraction> {

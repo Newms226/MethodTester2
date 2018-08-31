@@ -21,9 +21,9 @@ public interface RoundListAbstraction {
 	
 	RoundContext getContext();
 	
-	void lap(String str, LapAbstraction lap);
+	void lap(String str, LapAbstraction lap) throws NullPointerException;
 	
-	void lap(String str, long elapsed);
+	void lap(String str, long elapsed) throws NullPointerException;
 	
 	LapAbstraction getLap(String str, int round);
 	
