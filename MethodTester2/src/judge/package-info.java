@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author Michael
- *
- */
-package judge;
