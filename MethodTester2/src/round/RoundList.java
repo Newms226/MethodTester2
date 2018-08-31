@@ -41,7 +41,6 @@ public final class RoundList implements RoundListAbstraction {
 	{
 		this.context = context;
 		this.runFor = runFor;
-		this.nanoSecondPrecise = nanoSecondPrecise;
 		this.count = context.count();
 		summaryStats = new SummaryStatistics[count];
 		for (int i = 0; i < count; i++) {
