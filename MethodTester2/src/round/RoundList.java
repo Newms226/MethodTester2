@@ -32,13 +32,7 @@ public final class RoundList implements RoundListAbstraction {
 	
 	private final int count;
 	
-	private final int maxIndex;
-	
-	private int currentBaseIndex;
-	
-	private int additions;
-	
-	private LapAbstraction[] laps;
+	private LapAbstraction[][] laps;
 	
 	public RoundList(RoundContext context, int runFor, 
 			         boolean nanoSecondPrecise) 
@@ -51,8 +45,7 @@ public final class RoundList implements RoundListAbstraction {
 		for (int i = 0; i < count; i++) {
 			summaryStats[i] = new SummaryStatistics();
 		}
-		maxIndex = count * runFor;
-		laps = new LapAbstraction[maxIndex];
+		laps = new Lap[runFor][count];
 		
 		log.traceExit("Created new " + getClass() + " object of size " + count);
 	}
@@ -66,7 +59,7 @@ public final class RoundList implements RoundListAbstraction {
 	public Stream<LapAbstraction> stream(String str) {
 		return StreamSupport.stream(
 					Spliterators.spliterator(new LapBasedRoundIterator(str),
-							                 maxIndex / count,
+							                 runFor,
 							                 Spliterator.IMMUTABLE 
 							                 | Spliterator.ORDERED), // TODO: is this right?
 					true);
@@ -77,6 +70,7 @@ public final class RoundList implements RoundListAbstraction {
 		return context;
 	}
 
+	// TODO: This is very labour intensive for something much easier accomplished with a simplier data sctructure
 	@Override
 	public void lap(String str, LapAbstraction lap) {
 		log.traceEntry("lap({}, {})", Objects.requireNonNull(str), 
@@ -152,14 +146,6 @@ public final class RoundList implements RoundListAbstraction {
 					+ NumberTools.format(round)));
 	}
 	
-	private void indexRangeCheck(int index) throws IndexOutOfBoundsException {
-		if (index >= maxIndex)
-			throw log.throwing(new IndexOutOfBoundsException(
-					"Invalid index number. Max: = " 
-					+ NumberTools.format(maxIndex) + " Entered: " 
-					+ NumberTools.format(index)));
-	}
-	
 	private class LapBasedRoundIterator implements Iterator<LapAbstraction> {
 		private int offSet;
 		
@@ -167,18 +153,17 @@ public final class RoundList implements RoundListAbstraction {
 		
 		private LapBasedRoundIterator(String str) {
 			offSet = context.getMapping(str);
-			currentIndex = 0 - offSet;
 		}
 
 		@Override
 		public boolean hasNext() {
-			return currentIndex + count < maxIndex;
+			return currentIndex >= runFor;
 		}
 
 		@Override
 		public LapAbstraction next() throws NoSuchElementException {
 			try {
-				return laps[currentIndex += offSet];
+				return laps[currentIndex++][offSet];
 			} catch (ArrayIndexOutOfBoundsException e) {
 				throw log.throwing(Level.ERROR, new NoSuchElementException());
 			}
@@ -187,8 +172,8 @@ public final class RoundList implements RoundListAbstraction {
 	}
 	
 	public static void main(String[] args) {
-		int x = -1;
-		System.out.println((x += 1) + "");
+		int x = 0;
+		System.out.println((x++) + "");
 		System.out.println(x);
 	}
 }
