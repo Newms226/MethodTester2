@@ -32,6 +32,10 @@ public final class RoundList implements RoundListAbstraction {
 	
 	private final int count;
 	
+	private int additions;
+	
+	private int roundNumber;
+	
 	private LapAbstraction[][] laps;
 	
 	public RoundList(RoundContext context, int runFor, 
@@ -73,29 +77,30 @@ public final class RoundList implements RoundListAbstraction {
 	// TODO: This is very labour intensive for something much easier accomplished with a simplier data sctructure
 	@Override
 	public void lap(String str, LapAbstraction lap) {
-		log.traceEntry("lap({}, {})", Objects.requireNonNull(str), 
-				Objects.requireNonNull(lap));
-		int index = context.getMapping(str + currentBaseIndex);
-		indexRangeCheck(index);
+		log.traceEntry("lap({}, {}) for round {}", Objects.requireNonNull(str), 
+				Objects.requireNonNull(lap), roundNumber);
+		roundRangeCheck(roundNumber); // ensure no lapping after runFor passed
+		
+		int offSet = context.getMapping(str);
 		
 		// look out for setting previously non-null objects
-		if (laps[index] != null) {
-			log.warn("Lap at round " + NumberTools.format(index / runFor) 
-				+ " is currently " + laps[index] + " and is being set to "
-				+ lap);
+		if (laps[roundNumber][offSet] != null) {
+			log.warn("Lap at round " + NumberTools.format(roundNumber) 
+				+ " is currently " + laps[roundNumber][offSet] + " and is being"
+				+ " set to " + lap);
 		}
 		
 		// set value;
-		laps[index] = lap;
+		laps[roundNumber][offSet] = lap;
+		additions++;
 		
 		// reset additions count
 		if (additions == count) {
 			additions = 0;
-			currentBaseIndex += count;
+			roundNumber++;
 		}
 		
-		log.traceExit("Set " + str + "'s lap as " 
-				+ NumberTools.format(index / runFor));
+		log.traceExit();
 	}
 
 	@Override
@@ -107,8 +112,7 @@ public final class RoundList implements RoundListAbstraction {
 	public LapAbstraction getLap(String str, int round) {
 		roundRangeCheck(round);
 		
-		// TODO Auto-generated method stub
-		return null;
+		return log.traceExit(laps[round][context.getMapping(str)]);
 	}
 
 	@Override

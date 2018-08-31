@@ -74,7 +74,9 @@ public final class RoundContext {
 					+ "RoundContextObject"));
 		}
 		
+		// Sort to enable binary search later down the road.
 		Arrays.sort(contenders, String.CASE_INSENSITIVE_ORDER);
+		
 		return log.traceExit("Created round context object from: {}", 
 				             new RoundContext(contenders));
 	}
@@ -116,11 +118,12 @@ public final class RoundContext {
 	 */
 	public String getMapping(int index) throws RoundContextException {
 		if (index >= count) {
-			throw new RoundContextException("Index out of bounds exception. No"
-					+ " Mapping for: " + index);
+			throw log.throwing(Level.ERROR, new RoundContextException(
+					"Index out of bounds exception. No mapping for: " 
+					+ index));
 		}
 		
-		return contenders[index];
+		return log.traceExit(contenders[index]);
 	}
 	
 	/**
@@ -139,11 +142,12 @@ public final class RoundContext {
 	public int getMapping(String str) throws RoundContextException {
 		int toReturn = Arrays.binarySearch(contenders, str);
 		if (toReturn == -1) {
-			throw new RoundContextException("No mapping present for: " + str);
+			throw log.throwing(Level.ERROR, new RoundContextException(
+					"No mapping present for: " + str));
 		}
 		
 		// else
-		return toReturn;
+		return log.traceExit(toReturn);
 	}
 	
 	/**
