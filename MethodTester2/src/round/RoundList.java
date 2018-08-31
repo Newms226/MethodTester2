@@ -26,8 +26,6 @@ public final class RoundList implements RoundListAbstraction {
 	
 	private final RoundContext context;
 	
-	private final boolean nanoSecondPrecise;
-	
 	private final SummaryStatistics[] summaryStats;
 	
 	private final int count;
