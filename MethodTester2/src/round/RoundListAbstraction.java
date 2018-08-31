@@ -25,12 +25,6 @@ public interface RoundListAbstraction {
 	
 	void lap(String str, long elapsed);
 	
-	boolean isNanoSecondPrecise();
-	
-	default boolean isMilliSecondPrecise() {
-		return !isNanoSecondPrecise();
-	}
-	
 	LapAbstraction getLap(String str, int round);
 	
 	RoundAbstraction getRound(int round);
