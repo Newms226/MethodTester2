@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import lap.Lap;
 import lap.LapAbstraction;
 import lap.LapListAbstraction;
+import tools.Log4JTools;
 import tools.NumberTools;
 
 public final class RoundList implements RoundListAbstraction {
@@ -37,6 +38,12 @@ public final class RoundList implements RoundListAbstraction {
 	public RoundList(RoundContext context, int runFor, 
 			         boolean nanoSecondPrecise) 
 	{
+		Log4JTools.assertNonNull(context, log);
+		if (runFor <= 0) {
+			throw log.throwing(new IllegalArgumentException("runFor must be at "
+					+ "least 1: " + runFor));
+		}
+		
 		this.context = context;
 		this.runFor = runFor;
 		this.nanoSecondPrecise = nanoSecondPrecise;

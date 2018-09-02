@@ -116,8 +116,8 @@ public final class RoundContext {
 	 */
 	public String getMapping(int index) throws RoundContextException {
 		if (index >= count) {
-			throw new RoundContextException("Index out of bounds exception. No"
-					+ " Mapping for: " + index);
+			throw log.throwing(new RoundContextException("Index out of bounds"
+					+ " exception. No Mapping for: " + index));
 		}
 		
 		return contenders[index];
@@ -139,7 +139,8 @@ public final class RoundContext {
 	public int getMapping(String str) throws RoundContextException {
 		int toReturn = Arrays.binarySearch(contenders, str);
 		if (toReturn == -1) {
-			throw new RoundContextException("No mapping present for: " + str);
+			throw log.throwing(new RoundContextException("No mapping present"
+					+ " for: " + str));
 		}
 		
 		// else
