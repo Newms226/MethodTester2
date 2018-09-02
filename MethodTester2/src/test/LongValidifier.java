@@ -143,6 +143,13 @@ public class LongValidifier {
 		System.out.println("Pass: " + x.getPassCount());
 		System.out.println();
 		System.out.println(test.elements);
+		System.out.println();
+		
+		x = test.getPassFromRange(.1);
+		System.out.println("%: " + (x.getPercentPass() * 100));
+		System.out.println("Pass: " + x.getPassCount());
+		
+		
 	}
 	
 	public static void main(String[] args) {
