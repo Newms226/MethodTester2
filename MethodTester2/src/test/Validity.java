@@ -40,18 +40,24 @@ class Validity implements Consumer<TestPair<Long>> {
 	
 	static final double MAX_PERCENT_RANGE = 1;
 	
-	private int passCount, count;
-	
+	int passCount, count;
+
 	private double acceptableRange;
 
 	Validity(double acceptableRange) throws IllegalArgumentException {
 		log.traceEntry("new({})", NumberTools.format(acceptableRange));
-		if (acceptableRange < 0 || acceptableRange > MAX_PERCENT_RANGE) {
+	
+		this.acceptableRange = rangeTest(acceptableRange);
+		log.traceExit();
+	}
+	
+	static double rangeTest(double range) throws IllegalArgumentException {
+		log.traceEntry("rangeTest({})", range);
+		if (range < 0 || range > MAX_PERCENT_RANGE) {
 			throw log.throwing(new IllegalArgumentException("Acceptable "
 					+ "range must be between 0 & 1"));
 		}
-		this.acceptableRange = acceptableRange;
-		log.traceExit();
+		return log.traceExit(Math.abs(range));
 	}
 	
 	void combine(Validity other) {
@@ -92,6 +98,18 @@ class Validity implements Consumer<TestPair<Long>> {
 	
 	double getPercentPass() {
 		return log.traceExit("percent pass: {}", ((double) passCount / count));
+	}
+	
+	public int getPassCount() {
+		return passCount;
+	}
+
+	public int getCount() {
+		return count;
+	}
+	
+	public double getAcceptableRange() {
+		return acceptableRange;
 	}
 	
 	public String toString() {
