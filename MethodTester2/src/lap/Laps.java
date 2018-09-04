@@ -94,7 +94,7 @@ public class Laps {
 	 *         Oracle
 	 */
 	public static String nanosecondsToString(double nanoseconds) throws IllegalArgumentException {
-		if (nanoseconds == 0) return "0 nanoseconds";
+		if (nanoseconds == 0) return "NS: 0";
 		if (nanoseconds < 0) {
 			throw new IllegalArgumentException("Cannot work with negative nanoseconds");
 		}

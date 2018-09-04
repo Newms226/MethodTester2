@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import tools.Log4JTools;
 import tools.NumberTools;
 
-public class TestPair<T extends Comparable<T>> {
+public class TestPair<T> {
 	/**
 	 * Static factory method. Note that internals of this class will throw a 
 	 * <tt>NullPointerException</tt> if either of the parameters are <tt>null</tt>
@@ -18,7 +18,7 @@ public class TestPair<T extends Comparable<T>> {
 	 * 
 	 * @return a <tt>TestPair</tt> representing the values passed in.
 	 */
-	public static <T extends Comparable<T>> TestPair<T> from(T expected, T result) {
+	public static <T> TestPair<T> from(T expected, T result) {
 		TestPair<T> toReturn = new TestPair<>();
 		toReturn.setExpected(expected);
 		toReturn.setResult(result);
@@ -88,7 +88,7 @@ public class TestPair<T extends Comparable<T>> {
 	 */
 	void setResult(T result) {
 		log.traceEntry(setResultMessage, result);
-		Log4JTools.assertNonNull(expected, log);
+		Log4JTools.assertNonNull(result, log);
 		
 		this.result = result;
 		
@@ -116,7 +116,7 @@ public class TestPair<T extends Comparable<T>> {
 	boolean pass() {
 		log.traceEntry();
 		if (expected != null && result != null) {
-			return log.traceExit(expected.compareTo(result) == 0);
+			return log.traceExit(expected.equals(result));
 		}
 		
 		log.info("At least one object was null. E: {} R: {}", expected, result);
@@ -130,6 +130,16 @@ public class TestPair<T extends Comparable<T>> {
 			toReturn.setResult(result);
 		}
 		return toReturn;
+	}
+	
+	public String toCSV() {
+		return expected + "," + result;
+	}
+	
+	//TODO: Error checking, imperfect user, GENERIC
+	public static TestPair<Long> fromLongCSV(String str){
+		String[] values = str.split(",");
+		return TestPair.from(Long.parseLong(values[0]), Long.parseLong(values[1]));
 	}
 	
 	public String toString() {

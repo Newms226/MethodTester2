@@ -44,6 +44,9 @@ public final class Lap implements LapAbstraction {
 	}
 	
 	private void setTimeStampMills(long mills) {
+		log.traceEntry();
+		log.warn("SET TIME STAMP MILLS TO " + mills + " READ AS " 
+				+ Instant.ofEpochMilli(mills));
 		this.timeStamp = mills;
 	}
 
@@ -55,6 +58,10 @@ public final class Lap implements LapAbstraction {
 	@Override
 	public LapStats getLapStatistics() {
 		return stats;
+	}
+	
+	public String toString() {
+		return Laps.nanosecondsToString(elapsed);
 	}
 
 }

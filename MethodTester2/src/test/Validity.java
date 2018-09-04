@@ -117,4 +117,17 @@ class Validity implements Consumer<TestPair<Long>> {
 				+ NumberTools.format(count) + " Acceptable Range: " 
 				+ NumberTools.formatPercent(acceptableRange);
 	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (!getClass().equals(o.getClass())) return false;
+		
+		Validity that = (Validity) o;
+		if (that.passCount != passCount) return false;
+		if (that.count != count) return false;
+		if (that.acceptableRange != acceptableRange) return false;
+		
+		return true;
+	}
 }

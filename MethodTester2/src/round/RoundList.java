@@ -1,5 +1,6 @@
 package round;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -24,6 +25,10 @@ public final class RoundList implements RoundListAbstraction {
 	private static final Logger log = LogManager.getLogger();
 	
 	private final int runFor;
+	
+	private int run;
+	
+	private int additions;
 	
 	private final RoundContext context;
 	
@@ -82,23 +87,23 @@ public final class RoundList implements RoundListAbstraction {
 	public void lap(String str, LapAbstraction lap) {
 		log.traceEntry("lap({}, {})", Objects.requireNonNull(str), 
 				Objects.requireNonNull(lap));
-		int index = context.getMapping(str + currentBaseIndex);
-		indexRangeCheck(index);
+		int index = context.getMapping(str);
 		
 		// look out for setting previously non-null objects
-		if (laps[index] != null) {
-			log.warn("Lap at round " + NumberTools.format(index / runFor) 
-				+ " is currently " + laps[index] + " and is being set to "
+		if (laps[run][index] != null) {
+			log.warn("Lap at round " + NumberTools.format(run) 
+				+ " is currently " + laps[run][index] + " and is being set to "
 				+ lap);
 		}
 		
 		// set value;
-		laps[index] = lap;
+		laps[run][index] = lap;
 		
+		additions++;
 		// reset additions count
 		if (additions == count) {
 			additions = 0;
-			currentBaseIndex += count;
+			run++;
 		}
 		
 		log.traceExit("Set " + str + "'s lap as " 
@@ -178,6 +183,9 @@ public final class RoundList implements RoundListAbstraction {
 		
 	}
 	
+	public String toString() {
+		return Arrays.deepToString(laps);
+	}
 	public static void main(String[] args) {
 		int x = 0;
 		System.out.println((x++) + "");
