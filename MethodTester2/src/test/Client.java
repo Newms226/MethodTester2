@@ -17,7 +17,7 @@ public class Client {
 	
 	static ConsoleMenu main, valdifierMenu;
 	ConsumerOption<LongValidifier> adjustRange;
-	RunnableOption getRandomValidfier, getSequentialValidifer, roundTest, threadedTest;
+	RunnableOption getRandomValidfier, getSequentialValidifer, roundTest, threadedTest, randomThreadedTest;
 	
 	Client() {
 		main = new ConsoleMenu("Test Client");
@@ -29,6 +29,8 @@ public class Client {
 		main.add(threadedTest);
 		roundTest = new RunnableOption("Round test", () -> testRoundList());
 		main.add(roundTest);
+		randomThreadedTest = new RunnableOption("get Random Threaded test", () -> generateThreadedRandomObject());
+		main.add(randomThreadedTest);
 		main.add(RunnableOption.EXIT_WITHOUT_SAFE);
 		adjustRange = new ConsumerOption<>(
 				"Adjust the acceptable range", 
@@ -106,7 +108,17 @@ public class Client {
 		double acceptableRange = NumberTools.generateDouble("Enter the acceptable ragne", false, 0, 1);
 		int startValue = NumberTools.generateInt("Enter the millis to start at", false, 0, Integer.MAX_VALUE);
 		int endValue = NumberTools.generateInt("enter the millis to end at", false, 0, Integer.MAX_VALUE);
-		LongValidifier v = LongValidifier.sequentialTHREADEDtest(startValue, endValue, runFor, acceptableRange);
+		LongValidifier v = LongValidifier.sequentialTHREADEDTest(runFor, acceptableRange, startValue, endValue);
+		adjustRange.setObjectToConsume(v);
+		valdifierMenu.selection();
+	}
+	
+	private void generateThreadedRandomObject() {
+		int runFor = NumberTools.generateInt("Enter times to run for", false, 1, Integer.MAX_VALUE);
+		double acceptableRange = NumberTools.generateDouble("Enter the acceptable ragne", false, 0, 1);
+		int randomMAx = NumberTools.generateInt("Enter the maximum value", false, 0, Integer.MAX_VALUE);
+		int offset = NumberTools.generateInt("enter the offset", false, 0, Integer.MAX_VALUE);
+		LongValidifier v = LongValidifier.randomTHREADEDtest(runFor, acceptableRange, randomMAx, offset);
 		adjustRange.setObjectToConsume(v);
 		valdifierMenu.selection();
 	}
