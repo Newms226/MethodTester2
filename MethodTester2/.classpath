@@ -12,5 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/ConsoleMenu"/>
+	<classpathentry kind="lib" path="/Library/Java/Extensions/commons-csv-1.5.jar" sourcepath="/Library/Java/Extensions/commons-csv-1.5-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

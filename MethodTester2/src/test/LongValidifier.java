@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.math3.ml.neuralnet.twod.util.TopographicErrorHistogram;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +38,7 @@ import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.spi.LoggerContext;
 
+import csv.CSVObjectParsingScheme;
 import lap.Laps;
 import menu.ConsoleMenu;
 import tools.FileTools;
@@ -372,7 +374,7 @@ public class LongValidifier {
 		final File dir;
 		final String subDirectory;
 		
-		FileSet(String rootDirectory, String subDirectory) throws IOException {	
+		 (String rootDirectory, String subDirectory) throws IOException {	
 			FileTools.assertValidDirectory(rootDirectory); // exception to be caught
 			dir = new File(rootDirectory);
 			this.subDirectory = subDirectory;
@@ -564,19 +566,24 @@ public class LongValidifier {
 		StringBuilder buf = new StringBuilder(EXPECTED + millisToNanos(expectedValue) + "\n");
 		if (values == null) return buf.toString();
 		
+		buf.append("{");
 		for (T t: values) {
-			buf.append(t + "\n");
+			buf.append(t + ",");
 		}
+		buf.insert(buf.length() - 1, "}"); // TODO
+		buf.setLength(buf.length() - 1);
 		return buf.toString();
 	}
 	
 	private static <T> String getRandomFileText(Iterable<T> values, int expectedValue) {
 		if (values == null) return "";
 		
-		StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder("{");
 		for (T t: values) {
-			buf.append(t + "\n");
+			buf.append("[" + t + "],");
 		}
+		buf.insert(buf.length() - 1, "}"); // TODO
+		buf.setLength(buf.length() - 1);
 		return buf.toString();
 	}
 

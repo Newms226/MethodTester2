@@ -9,7 +9,7 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import contestant.Contender;
 import judge.AnalysisScheme;
-import judge.Judge;
+import judge.JudgeingScheme;
 import lap.LapAbstraction;
 import lap.LapAbstraction;
 import laplist.LapList;
